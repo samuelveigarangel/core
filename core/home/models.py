@@ -9,12 +9,59 @@ from wagtail.fields import RichTextField
 from wagtail.models import Page
 from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
+from journal.models import Journal
+from journal.choices import STUDY_AREA
+from collection.models import Collection
+from institution.models import Institution
+
 
 class HomePage(Page):
-    pass
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        collections = Collection.objects.all()
+        children = self.get_children()
 
-class HomeORGPage(Page):
-    pass
+        context['collections'] = collections
+        context['children'] = children
+        return context
+
+
+class ListJournal(Page):
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        parent_specific_page = self.get_parent().specific
+        journals = Journal.objects.all()
+        
+        category = request.GET.get("category")
+        search_term = request.GET.get('search_term', '')
+        search_type = request.GET.get('search_type', '')
+        publisher = category == 'publisher'
+        institution = ''
+        
+        if any(category in item for item in STUDY_AREA):
+            journals = journals.filter(subject__code=category).order_by("title")
+        elif search_term:
+            if search_type == 'contains':
+                journals = journals.filter(title__icontains=search_term)
+            elif search_type == 'exact':
+                journals = journals.filter(title__exact=search_term)
+                print(journals)
+            elif search_type == 'startswith':
+                journals = journals.filter(title__startswith=search_term)
+        else:
+            journals = journals.order_by("title")
+        
+        if publisher:
+            institution = Institution.objects.all().order_by("name")
+
+        context['search_term'] = search_term
+        context['search_type'] = search_type
+        context['parent_page'] = parent_specific_page
+        context['publisher'] = publisher
+        context['institution'] = institution
+        context['category'] = category
+        context["journals"] = journals
+        return context
 
 
 class FormField(AbstractFormField):
