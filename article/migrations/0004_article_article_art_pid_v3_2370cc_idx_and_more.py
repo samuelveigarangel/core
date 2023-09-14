@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("article", "0002_article_issue_article_journal_article_keywords_and_more"),
+        ("article", "0003_alter_article_first_page_alter_article_last_page"),
     ]
 
     operations = [

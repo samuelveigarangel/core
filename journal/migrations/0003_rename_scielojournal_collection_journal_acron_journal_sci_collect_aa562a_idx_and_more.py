@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("journal", "0001_initial"),
+        ("journal", "0002_remove_journal_name_remove_journal_url_and_more"),
     ]
 
     operations = [

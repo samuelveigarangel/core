@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
     dependencies = [
         ("wagtaildocs", "0012_uploadeddocument"),
-        ("location", "0001_initial"),
+        ("location", "0002_city_location_ci_name_673b17_idx_and_more"),
     ]
 
     operations = [
