@@ -1,61 +1,25 @@
 {% extends "home/scieloorg/base.html" %}
 {% load i18n wagtailcore_tags %}
+{% load wagtailsettings_tags %}
 
 {% block title %}{{page.specific.title}}{% endblock title %}
 
 {% block content %}
-    <!-- {% if page %}
-        {% for translation in page.get_translations.live %}
-            {% get_language_info for translation.locale.language_code as lang %}
-            <a href="{% pageurl translation %}" rel="alternate" hreflang="{{ language_code }}">
-                {{ lang.name_local }}
-            </a>
-            {% endfor %}
-            {{page.specific.title}}
-    {% endif %} -->
 
-    {% for col in collections %}
-        <a href="http://{{col.domain}}" target="_blank">{{col.main_name}}</a>
-    {% endfor %}
-
-    <!-- Search solr -->
-    Solr
-    <form action="{% url 'search:search' %}">
-        <input name="search" type="text" placeholder="Procurar...">
-        <button type="submit">Pesquisar</button>
-    </form>
-    
-    <form method="get" action="{% pageurl children.first %}">
-        <label for="search_term">Search Term:</label>
-        <input type="text" id="search_term" name="search_term" value="{{ search_term }}" placeholder="Enter search term">
-        
-        <label for="search_type">Search Type:</label>
-        <select id="search_type" name="search_type">
-            <option value="contains" {% if search_type == 'contains' %}selected{% endif %}>Contains</option>
-            <option value="exact" {% if search_type == 'exact' %}selected{% endif %}>Exact Title</option>
-            <option value="startswith" {% if search_type == 'startswith' %}selected{% endif %}>Starts With</option>
-        </select>
-        
-        <button type="submit">Search</button>
-    </form>
-
-    <form method="get" action="{% pageurl children.first %}">
-        <button type="submit" value="Agricultural Sciences" name="category">Agricultural Sciences</button>
-        <button type="submit" value="Biological Sciences" name="category">Biological Sciences</button>
-        <button type="submit" value="Applied Social Sciences" name="category">Applied Social Sciences</button>
-        <button type="submit" value="Engineering" name="category">Engineering</button>
-        <button type="submit" value="Exact and Earth Sciences" name="category">Exact and Earth Sciences</button>
-        <button type="submit" value="Health Sciences" name="category">Health Sciences</button>
-        <button type="submit" value="Human Sciences" name="category">Human Sciences</button>
-        <button type="submit" value="Linguistics, Letters and Arts" name="category">Linguistics, Letters and Arts</button>
-        <button type="submit" value="Psicanalise" name="category">Psicanalise</button>
-        <button type="submit" value="publisher" name="category">Of publisher</button>
-        <button type="submit" value="" name="category">All</button>
-        <button type="submit" value="" name="category">In alphabetical order</button>
-    </form>
-
-{% endblock %}
-
+<style>
+    #tab-periodicos dl dd>button {
+    background: #fff;
+    border: 1px solid #DAE3F4;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #6789D3;
+    padding: 1rem 1.5rem;
+    float: left;
+}
+    .dd-button{
+        margin-bottom: 0px !important;
+    }
+</style>
 
 <div class="container">
 
