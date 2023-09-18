@@ -6,10 +6,10 @@
             <div class="col-md-12 nav-center">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <h2><a href="#tab-colecoes" data-toggle="tab">Collections</a></h2>
+                        <h2><a href="#tab-colecoes" data-toggle="tab">{% trans 'Collections' %}</a></h2>
                     </li>
                     <li>
-                        <h2><a href="#tab-periodicos" data-toggle="tab">Journals</a></h2>
+                        <h2><a href="#tab-periodicos" data-toggle="tab">{% trans 'Journals' %}</a></h2>
                     </li>
                     <!-- Youtube videos is static, so it's not coming from the backend -->
                 </ul>
@@ -19,18 +19,18 @@
         <div class="tab-content clearfix">
             <div class="row row-tab-mobile">
                 <div class="col-xs-12">
-                    <h2><a href="#tab-colecoes" data-toggle="tab" class="btn btn-tab-mobile active">Collections</a></h2>
+                    <h2><a href="#tab-colecoes" data-toggle="tab" class="btn btn-tab-mobile active">{% trans 'Collections' %}</a></h2>
                 </div>
             </div>
 
-            <div class="tab-pane active " id="tab-colecoes">
+            <div class="tab-pane active" id="tab-colecoes">
                 <div class="row">
                     <div class="col-sm-12 col-md-12">
                         <dl>
                             {% for col in collections_journals %}
                                 {% if forloop.first %}
                                 <dd class="flag-{{col.acron3}} flag-no-data  first-node-collection">
-                                    <h3>Journals</h3>
+                                    <h3>{% trans 'Journals' %}</h3>
                                     <a href="http://{{col.domain}}">
                                         <h4>{{col}}</h4>
                                         <span> </span>
@@ -45,11 +45,11 @@
                                 </dd>
                                 {% endif %}
                             {% endfor%}
-
+            
                             {% for col in collections_in_development %}
                                 {% if forloop.first %}
                                 <dd class="flag-{{col.acron3}} flag-no-data  first-node-collection">
-                                    <h3>In development</h3>
+                                    <h3>{% trans 'In development' %}</h3>
                                     <a href="http://{{col.domain}}">
                                         <h4>{{col}}</h4>
                                         <span> </span>
@@ -65,36 +65,37 @@
                                 {% endif %}
                             {% endfor%}
                             <div>
-                            {% for col in collections_servers_and_repositorios %}
-                                {% if forloop.first %}
-                                <dd class="scielo-servers-repos scielo-servers-repos-no-data first-node-collection">
-                                    <h3>Servers and Repositories</h3>
-                                    <a href="http://{{col.domain}}">
-                                        <h4>{{col}}</h4>
-                                        <span> </span>
-                                    </a>
-                                </dd>
-                                {% else %}
-                                <dd class="scielo-servers-repos scielo-servers-repos-no-data">
-                                    <a href="http://{{col.domain}}">
-                                        <h4>{{col}}</h4>
-                                        <span> </span>
-                                    </a>
-                                </dd>
-                                {% endif %}
-                            {% endfor%}
+                                {% for col in collections_servers_and_repositorios %}
+                                    {% if forloop.first %}
+                                    <dd class="scielo-servers-repos scielo-servers-repos-no-data first-node-collection">
+                                        <h3>{% trans 'Servers and Repositories' %}</h3>
+                                        <a href="http://{{col.domain}}">
+                                            <h4>{{col}}</h4>
+                                            <span> </span>
+                                        </a>
+                                    </dd>
+                                    {% else %}
+                                    <dd class="scielo-servers-repos scielo-servers-repos-no-data">
+                                        <a href="http://{{col.domain}}">
+                                            <h4>{{col}}</h4>
+                                            <span> </span>
+                                        </a>
+                                    </dd>
+                                    {% endif %}
+                                {% endfor%}
                             </div>
+            
                             {% for col in collections_books %}
                                 {% if forloop.first %}
-                                <dd class="scielo-books scielo-books-no-data   first-node-collection">
-                                    <h3>Books</h3>
+                                <dd class="scielo-books scielo-books-no-data first-node-collection">
+                                    <h3>{% trans 'Books' %}</h3>
                                     <a href="http://{{col.domain}}">
                                         <h4>{{col}}</h4>
                                         <span> </span>
                                     </a>
                                 </dd>
                                 {% else %}
-                                <dd class="scielo-books scielo-books-no-data ">
+                                <dd class="scielo-books scielo-books-no-data">
                                     <a href="http://{{col.domain}}">
                                         <h4>{{col}}</h4>
                                         <span> </span>
@@ -102,11 +103,11 @@
                                 </dd>
                                 {% endif %}
                             {% endfor%}
-
+            
                             {% for col in collections_others %}
                                 {% if forloop.first %}
-                                <dd class="scielo-books scielo-books-no-data  first-node-collection">
-                                    <h3>Others</h3>
+                                <dd class="scielo-books scielo-books-no-data first-node-collection">
+                                    <h3>{% trans 'Others' %}</h3>
                                     <a href="http://{{col.domain}}">
                                         <h4>{{col}}</h4>
                                         <span> </span>
@@ -128,45 +129,28 @@
             </div>
             <div class="row row-tab-mobile">
                 <div class="col-xs-12">
-                    <h2><a href="#tab-periodicos" data-toggle="tab" class="btn btn-tab-mobile active">Journals</a></h2>
+                    <h2><a href="#tab-periodicos" data-toggle="tab" class="btn btn-tab-mobile active">{% trans 'Journals' %}</a></h2>
                 </div>
             </div>
-
-            <div class="tab-pane  " id="tab-periodicos">
+            
+            <div class="tab-pane" id="tab-periodicos">
                 <div class="row">
                     <div class="col-md-12">
                         <dl>
                             <dt>
-                                <h3>Search journals</h3>
+                                <h3>{% trans 'Search journals' %}</h3>
                             </dt>
                             <dd class="search-periodicos">
                                 <form method="get" action="{% pageurl children.first %}">
                                     <input type="hidden" name="matching" id="matching" value="contains">
                                     <div class="input-group">
                                         <input type="text" name="search" id="search" class="form-control"
-                                            placeholder="Enter one or more words">
+                                            placeholder="{% trans 'Enter one or more words' %}">
                                         <div class="input-group-btn">
-                                            <button type="button" id="matchingButton"
-                                                class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-                                                Contains <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li><a
-                                                        href="javascript:scieloLib.SetMatching('Contains', 'contains');">Contains</a>
-                                                </li>
-                                                <li><a
-                                                        href="javascript:scieloLib.SetMatching('Exact title', 'extact_title');">Exact
-                                                        title</a></li>
-                                                <li><a
-                                                        href="javascript:scieloLib.SetMatching('Starts with', 'starts_with');">Starts
-                                                        with</a></li>
-                                            </ul>
-                                            <input type="submit" class="btn btn-primary" value="" alt="Buscar"
-                                                title="Buscar">
+                                            <input type="submit" class="btn btn-primary" value="" alt="{% trans 'Search' %}"
+                                                title="{% trans 'Search' %}">
                                         </div><!-- /input-group-btn -->
                                     </div><!-- /input-group -->
-
                                 </form>
                             </dd>
                         </dl>
@@ -174,14 +158,14 @@
                     <div class="col-md-2">
                         <dl>
                             <dt>
-                                <h3>List of journals</h3>
+                                <h3>{% trans 'List of journals' %}</h3>
                             </dt>
                             <form method="get" action="{% pageurl children.first %}">
                                 <dd class="text dd-button">
-                                    <button type="submit" value="" name="category">In alphabetical order</button>
+                                    <button type="submit" value="" name="category">{% trans 'In alphabetical order' %}</button>
                                 </dd>
                                 <dd class="text dd-button">
-                                    <button type="submit" value="publisher" name="category">Of publisher</button>
+                                    <button type="submit" value="publisher" name="category">{% trans 'Of publisher' %}</button>
                                 </dd>
                             </form>
                         </dl>
@@ -189,13 +173,14 @@
                     <div class="col-md-10">
                         <dl>
                             <dt>
-                                <h3>List of journals by subject</h3>
+                                <h3>{% trans 'List of journals by subject' %}</h3>
                             </dt>
                             <form method="get" action="{% pageurl children.first %}">
-                                <dd class="text dd-button" >
-                                    <button type="submit" value="" name="category">All</button></a>
+                                <dd class="text dd-button">
+                                    <button type="submit" value="" name="category">{% trans 'All' %}</button></a>
                                 </dd>
                                 <dd>
+                                <!-- FIXME Translation -->
                                 {% for category in categories %}
                                     <dd class="text dd-button">
                                         <button type="submit" value="{{category}}" name="category">{{category}}</button>
@@ -217,7 +202,7 @@
             <div class="col-md-12 nav-center">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <h2><a href="#tab-blog" data-toggle="tab">SciELO in Perspective</a></h2>
+                        <h2><a href="#tab-blog" data-toggle="tab">{% trans 'SciELO in Perspective' %}</a></h2>
                     </li>
                     <li>
                         <h2><a href="#tab-twitter" data-toggle="tab">Twitter @RedeSciELO</a></h2>
@@ -233,8 +218,7 @@
         <div class="tab-content clearfix">
             <div class="row row-tab-mobile">
                 <div class="col-xs-12">
-                    <h2><a href="#tab-blog" data-toggle="tab" class="btn btn-tab-mobile active">SciELO in
-                            Perspective</a></h2>
+                    <h2><a href="#tab-blog" data-toggle="tab" class="btn btn-tab-mobile active">{% trans 'SciELO in Perspective' %}</a></h2>
                 </div>
             </div>
 
