@@ -3,11 +3,12 @@ import sys
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 
 from collection.models import Collection
 from config import celery_app
 from core.utils.utils import fetch_data
-from pid_provider.models import CollectionPidRequest, PidRequest
+from pid_provider.models import CollectionPidRequest, PidRequest, PidProviderXML
 from pid_provider.sources import am
 from pid_provider.sources.harvesting import provide_pid_for_opac_and_am_xml
 from tracker.models import UnexpectedEvent
@@ -453,5 +454,32 @@ def task_provide_pid_for_xml_uri(
                     origin_date=origin_date,
                     force_update=force_update,
                 ),
+            },
+        )
+
+
+@celery_app.task(bind=True)
+def remove_duplicate_pidproviderxmls(self, user_id=None, username=None, pid_v3=None):
+    ids_to_exclude = []
+    try:
+        if pid_v3:
+            duplicates = PidProviderXML.objects.filter(v3=pid_v3).values("v3").annotate(v3_count=Count("v3")).filter(v3_count__gt=1)
+        else:
+            duplicates = PidProviderXML.objects.values("v3").annotate(v3_count=Count("v3")).filter(v3_count__gt=1)
+        for duplicate in duplicates:
+            article_ids = PidProviderXML.objects.filter(
+                v3=duplicate["v3"]
+            ).order_by("created")[1:].values_list("id", flat=True)
+            ids_to_exclude.extend(article_ids)
+
+        if ids_to_exclude:
+            PidProviderXML.objects.filter(id__in=ids_to_exclude).delete()
+    except Exception as exception:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        UnexpectedEvent.create(
+            exception=exception,
+            exc_traceback=exc_traceback,
+            detail={
+                "task": "pid_provider.tasks.remove_duplicate_pidproviderxmls",
             },
         )
