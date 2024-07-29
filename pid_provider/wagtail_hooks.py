@@ -1,3 +1,4 @@
+from django.db.models import OuterRef, Subquery
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
 from wagtail.contrib.modeladmin.options import (
@@ -6,6 +7,8 @@ from wagtail.contrib.modeladmin.options import (
     modeladmin_register,
 )
 from wagtail.contrib.modeladmin.views import CreateView
+from wagtail.snippets.views.snippets import SnippetViewSet
+from wagtail.snippets.models import register_snippet
 
 from config.menu import get_menu_order
 from .models import (
@@ -16,7 +19,7 @@ from .models import (
     PidRequest,
     FixPidV2,
 )
-
+from article.models import Article
 
 class PidRequestCreateView(CreateView):
     def form_valid(self, form):
@@ -222,3 +225,18 @@ class PidProviderAdminGroup(ModelAdminGroup):
 
 
 modeladmin_register(PidProviderAdminGroup)
+
+
+class PidProviderXMLDuplicateViewSet(SnippetViewSet):
+    model = PidProviderXML
+    icon = 'folder'
+    list_display = ["v3", "created"]
+    menu_name = "Unloaded Objects PidProvider"
+
+    def get_queryset(self, request):
+        subquery = Article.objects.filter(pid_v3=OuterRef("v3")).values("pid_v3")
+
+        unloaded_objetcs = PidProviderXML.objects.exclude(v3__in=Subquery(subquery))
+        return unloaded_objetcs
+
+register_snippet(PidProviderXMLDuplicateViewSet)
