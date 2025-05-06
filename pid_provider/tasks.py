@@ -467,11 +467,10 @@ def load_file_xml_version(username, collection_acron="scl", user_id=None):
     journals = SciELOJournal.objects.filter(collection__acron3="scl")
     for journal in journals:
         pid_provides = PidProviderXML.objects.filter(
-            Q(issn_print=journal.journal.official.issn_print) | 
-            Q(issn_electronic=journal.journal.official.issn_electronic), 
-            current_version__isnull=False).select_related(
-                "current_version"
-            ) 
+            Q(issn_print=journal.journal.official.issn_print)
+            | Q(issn_electronic=journal.journal.official.issn_electronic),
+            current_version__isnull=False,
+        ).select_related("current_version")
         logging.info(f"Processing {pid_provides.count()} items for journal {journal}")
         for item in pid_provides:
             try:
@@ -479,10 +478,10 @@ def load_file_xml_version(username, collection_acron="scl", user_id=None):
                     path = item.current_version.file.path
                 else:
                     raise ValueError(f"Missing path for item: {item.v3}")
-                
+
                 if path and not os.path.isfile(path):
                     # get acronym from path
-                    match = re.search(r'/pid_provider/\w+/\w+/([^/]+)/', path)
+                    match = re.search(r"/pid_provider/\w+/\w+/([^/]+)/", path)
                     if match:
                         acronym = match.group(1)
                     else:
@@ -496,12 +495,15 @@ def load_file_xml_version(username, collection_acron="scl", user_id=None):
                             dt = dt.replace(tzinfo=pytz.UTC)
                             formatted_date = dt.strftime("%a, %d %b %Y %H:%M:%S %Z")
                         except ValueError as ve:
-                            raise ValueError(f"Invalid date format for item {item.v3}: {item.origin_date}") 
+                            raise ValueError(
+                                f"Invalid date format for item {item.v3}: {item.origin_date}"
+                            )
 
                     article = {
                         "journal_acronym": acronym,
                         "update": formatted_date,
-                        "publication_date": item.pub_year or '1900', # don't used in processing
+                        "publication_date": item.pub_year
+                        or "1900",  # don't used in processing
                     }
                     logging.info(f"Processing item: {item.v3}")
                     provide_pid_for_opac_article.apply_async(
