@@ -12,7 +12,7 @@ from core.models import CommonControlField, Language, TextWithLang
 from core.utils.utils import fetch_data
 
 from . import choices
-
+from django.utils.translation import get_language
 
 class CollectionName(TextWithLang):
     collection = ParentalKey(
@@ -162,7 +162,11 @@ class Collection(CommonControlField, ClusterableModel):
         return "%s" % self.main_name or ""
 
     def __str__(self):
-        return "%s" % self.main_name or ""
+        lang = Language.get_or_create(code2=get_language())
+        try:
+            return f"{self.name.all().filter(language=lang)[0].text}"
+        except IndexError:
+            return f"{self.main_name}" or "" 
 
     base_form_class = CoreAdminModelForm
 
